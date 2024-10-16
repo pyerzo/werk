@@ -1,20 +1,14 @@
 from typing import Literal
 import reflex as rx
-from pydantic import BaseModel
+from reflex.components.radix.themes.base import LiteralAccentColor
 
 
 class TaskStatus(rx.Base):
     label: str
-    color_scheme: Literal["cyan", "orange", "gray"]
+    color_scheme: LiteralAccentColor
 
 
 class Task(rx.Base):
     title: str
     subtitle: str
-    status: Literal["pending", "done"]
-
-
-TASK_STATUS = {
-    "done": TaskStatus(label="Done", color_scheme="cyan"),
-    "pending": TaskStatus(label="Pending", color_scheme="orange"),
-}
+    status: str

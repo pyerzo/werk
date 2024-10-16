@@ -1,28 +1,28 @@
-from typing import Dict, List
 import reflex as rx
-from werk.models import TASK_STATUS, Task, TaskStatus
 from werk.template import template
+from werk.components.task_badge import task_badge
 
 
 class State(rx.State):
-    items: List[Task] = [
-        Task(
-            title="Complete Project Report",
-            subtitle="Finalize the details and submit by Friday",
-            status="pending",
-        ),
-        Task(
-            title="Data Analysis",
-            subtitle="Get data for 2024 sell reports",
-            status="done",
-        ),
-    ]
+    tasks: list[dict] = []
 
-    @staticmethod
-    def status(task: Task):
-        return TASK_STATUS.get(task.status) or TaskStatus(
-            label="Undefined", color_scheme="gray"
-        )
+    @rx.background
+    async def fetch(self):
+        async with self:
+            # with rx.session() as session:
+            #     self.card_data = session.exec(select(model)).all()
+            self.tasks = [
+                {
+                    "title": "Complete Project Report",
+                    "subtitle": "Finalize the details and submit by Friday",
+                    "status": "pending",
+                },
+                {
+                    "title": "Data Analysis",
+                    "subtitle": "Scrap, clean and show data",
+                    "status": "done",
+                },
+            ]
 
 
 @rx.page(route="tasks", title="Werk - Tasks")
@@ -53,14 +53,10 @@ def tasks() -> rx.Component:
         ),
         rx.flex(
             rx.foreach(
-                State.items,
+                State.tasks,
                 lambda item: rx.card(
-                    rx.heading(item.title, size="5"),
-                    rx.text(item.subtitle),
-                    rx.badge(
-                        State.status(item).label,
-                        color_scheme=State.status(item).color_scheme,
-                    ),
+                    rx.heading(item.title, size="4"),
+                    task_badge(item),
                     width=270,
                     style=rx.Style(
                         {
@@ -85,4 +81,5 @@ def tasks() -> rx.Component:
         spacing="5",
         justify="center",
         align="center",
+        on_mount=State.fetch,
     )
