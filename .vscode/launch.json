@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Reflex: Run Project",
+            "type": "python",
+            "request": "launch",
+            "program": "~/.cache/pypoetry/virtualenvs/werk-Zfslvkkv-py3.12/bin/reflex",
+            "args": ["run"],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
