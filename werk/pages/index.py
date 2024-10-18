@@ -20,17 +20,19 @@ def index() -> rx.Component:
         ),
         rx.input(
             placeholder="Username",
-            width="100%",
+            width="15em",
         ),
         rx.input(
             placeholder="Password",
             type="password",
-            width="100%",
+            width="15em",
         ),
         rx.button(
             "Login",
             on_click=State.login,
-            width="100%",
+            width="15em",
         ),
         justify="center",
+        align="center",
+        height="75vh",
     )

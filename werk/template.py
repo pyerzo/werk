@@ -8,9 +8,10 @@ def template(page: Callable[[], rx.Component]) -> rx.Component:
         rx.color_mode.button(position="top-right"),
         rx.container(
             page(),
-            min_height="85vh",
+            height="80vh",
             style=rx.Style({"marginTop": "5vh"}),
         ),
         rx.logo(),
+        height="100vh",
         width="100%",
     )

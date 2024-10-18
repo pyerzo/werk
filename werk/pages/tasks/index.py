@@ -1,6 +1,7 @@
 import reflex as rx
+from werk.components.task.add import task_add_dialog
 from werk.template import template
-from werk.components.task_badge import task_badge
+from werk.components.task.badge import task_badge
 
 
 class State(rx.State):
@@ -24,18 +25,33 @@ class State(rx.State):
                 },
             ]
 
+    @staticmethod
+    def is_undone(status):
+        return status != "done"
+
+    @staticmethod
+    def cond_undone(item, item_list):
+        return (
+            rx.cond(
+                State.is_undone(item.status),
+                item_list,
+            ),
+        )
+
 
 @rx.page(route="tasks", title="Werk - Tasks")
 @template
 def tasks() -> rx.Component:
     return rx.vstack(
         rx.hstack(
-            rx.button(
-                rx.icon(
-                    tag="plus",
-                    size=18,
-                ),
-                "Add",
+            task_add_dialog(
+                rx.button(
+                    rx.icon(
+                        tag="plus",
+                        size=18,
+                    ),
+                    "Add",
+                )
             ),
             rx.input(
                 rx.input.slot(
@@ -55,8 +71,35 @@ def tasks() -> rx.Component:
             rx.foreach(
                 State.tasks,
                 lambda item: rx.card(
-                    rx.heading(item.title, size="4"),
-                    task_badge(item),
+                    rx.hstack(
+                        task_badge(item),
+                        rx.menu.root(
+                            rx.menu.trigger(
+                                rx.button(
+                                    rx.icon_button(
+                                        "ellipsis-vertical",
+                                        variant="ghost",
+                                        size="1",
+                                    ),
+                                    variant="ghost",
+                                    size="1",
+                                ),
+                            ),
+                            rx.menu.content(
+                                State.cond_undone(item, rx.menu.item("Edit")),
+                                State.cond_undone(item, rx.menu.item("Mark as done")),
+                                rx.menu.item("Delete", color="salmon"),
+                                size="1",
+                            ),
+                        ),
+                        justify="between",
+                        align="center",
+                    ),
+                    rx.heading(
+                        item.title,
+                        size="3",
+                        style=rx.Style({"marginTop": "0.5em"}),
+                    ),
                     width=270,
                     style=rx.Style(
                         {
